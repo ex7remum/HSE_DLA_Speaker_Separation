@@ -149,7 +149,7 @@ class Trainer(BaseTrainer):
         metrics.update("loss", batch["loss"].item())
         metrics.update("si_sdr", batch["si_sdr"].item())
         metrics.update("ce_loss", batch["ce_loss"].item())
-        metrics.update("acc_speakers", batch["acc_speakers"].item())
+        metrics.update("acc_speakers", batch["acc_speakers"])
         for met in self.metrics:
             metrics.update(met.name, met(**batch))
         return batch
