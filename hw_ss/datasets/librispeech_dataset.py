@@ -88,7 +88,7 @@ class LibrispeechDataset(BaseDataset):
             speaker_files.append(LibriSpeechSpeakerFiles(speaker_id, split_dir,
                                                          audioTemplate='*.flac'))
 
-        not_test = 'train' in part
+        not_test = ('train' in part) or ('dev' in part)
         if not_test:
             mixture_generator = MixtureGenerator(speaker_files,
                                                  self._data_dir,
