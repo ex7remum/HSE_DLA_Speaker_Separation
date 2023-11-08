@@ -120,7 +120,6 @@ class LibrispeechDataset(BaseDataset):
             file_name = re.split('/', ref)[-1]
             target_id, noise_id, _ = re.split('_', file_name)
             target_id = self.id2ind[target_id]
-            print(target_id)
             index.append(
                 {
                     "ref_path": ref,

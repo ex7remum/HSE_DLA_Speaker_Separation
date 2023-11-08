@@ -130,7 +130,7 @@ class SpexPlus(nn.Module):
         ref = self.spk_encoder(ref)
         ref_T = (ref_len - self.short_kernel_size) // (self.short_kernel_size // 2) + 1
         ref_T = ((ref_T // 3) // 3) // 3
-        ref = torch.sum(ref, -1) / ref_T.view(-1, 1).float()
+        ref = torch.sum(ref, -1) / ref_T.view(-1, 1).float().to(ref.device)
 
         y = self.conv_block_1(y, ref)
         y = self.conv_block_1_other(y)

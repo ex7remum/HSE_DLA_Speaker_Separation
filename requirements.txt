@@ -12,5 +12,4 @@ torch_audiomentations
 wandb
 torchaudio~=0.11.0
 pillow
-glob
 pyloudnorm
