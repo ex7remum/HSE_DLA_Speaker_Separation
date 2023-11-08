@@ -32,7 +32,8 @@
             "limit": 4,
             "num_speakers": 10,
             "dataset_size": 1000,
-            "audio_len": 3
+            "audio_len": 3,
+            "max_audio_length": 10
           }
         }
       ]

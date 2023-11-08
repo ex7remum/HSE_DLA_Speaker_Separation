@@ -20,11 +20,12 @@ class BaseDataset(Dataset):
             config_parser: ConfigParser,
             wave_augs=None,
             limit=None,
+            max_audio_length=None,
     ):
         self.config_parser = config_parser
         self.wave_augs = wave_augs
 
-        self._index = self._filter_records_from_dataset(index, limit)
+        self._index = self._filter_records_from_dataset(index, limit, max_audio_length)
 
     def __getitem__(self, ind):
         data_dict = self._index[ind]
@@ -74,8 +75,36 @@ class BaseDataset(Dataset):
 
     @staticmethod
     def _filter_records_from_dataset(
-            index: list, limit
+            index: list, limit, max_audio_length
     ) -> list:
+        initial_size = len(index)
+        if max_audio_length is not None:
+            audio_lengths = []
+            for item in index:
+                audio_tensor, sr = torchaudio.load(item['ref_path'])
+                audio_tensor = audio_tensor[0:1, :]
+                target_sr = 16000
+                if sr != target_sr:
+                    audio_tensor = torchaudio.functional.resample(audio_tensor, sr, target_sr)
+                audio_lengths.append(audio_tensor.shape[-1])
+            exceeds_audio_length = np.array(audio_lengths) >= max_audio_length
+            _total = exceeds_audio_length.sum()
+            logger.info(
+                f"{_total} ({_total / initial_size:.1%}) records are longer then "
+                f"{max_audio_length} seconds. Excluding them."
+            )
+        else:
+            exceeds_audio_length = False
+
+        records_to_filter = exceeds_audio_length
+
+        if records_to_filter is not False and records_to_filter.any():
+            _total = records_to_filter.sum()
+            index = [el for el, exclude in zip(index, records_to_filter) if not exclude]
+            logger.info(
+                f"Filtered {_total}({_total / initial_size:.1%}) records  from dataset"
+            )
+
         if limit is not None:
             random.seed(54)  # best seed for deep learning
             random.shuffle(index)
