@@ -17,7 +17,7 @@
   "arch": {
     "type": "SpexPlus",
     "args": {
-      "num_spks": 2
+      "num_spks": 25
     }
   },
   "data": {
