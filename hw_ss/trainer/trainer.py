@@ -134,6 +134,7 @@ class Trainer(BaseTrainer):
         outputs = self.model(**batch)
 
         crit_out = self.criterion(outputs, batch)
+        print('Runned one batch')
         batch['loss'] = crit_out['loss']
         batch['si_sdr'] = crit_out['si_sdr']
         batch['ce_loss'] = crit_out['ce_loss']
@@ -143,14 +144,15 @@ class Trainer(BaseTrainer):
             self._clip_grad_norm()
             self.optimizer.step()
             if self.lr_scheduler is not None:
-                self.lr_scheduler.step(batch["loss"])  # because use ReduceLROnPlateau
-
+                self.lr_scheduler.step()
+            print('Backward')
         metrics.update("loss", batch["loss"].item())
         metrics.update("si_sdr", batch["si_sdr"].item())
         metrics.update("ce_loss", batch["ce_loss"].item())
         metrics.update("acc_speakers", batch["acc_speakers"].item())
         for met in self.metrics:
             metrics.update(met.name, met(**batch))
+        print('Metrics update')
         return batch
 
     def _evaluation_epoch(self, epoch, part, dataloader):

@@ -67,11 +67,13 @@
   },
   "metrics": [],
   "lr_scheduler": {
-    "type": "ReduceLROnPlateau",
+    "type": "OneCycleLR",
     "args": {
-      "min_lr": 0,
-      "factor": 0.5,
-      "patience": 2
+      "steps_per_epoch": 100,
+      "epochs": 100,
+      "anneal_strategy": "cos",
+      "max_lr": 1e-3,
+      "pct_start": 0.2
     }
   },
   "trainer": {
@@ -80,7 +82,7 @@
     "save_period": 5,
     "verbosity": 2,
     "monitor": "min val_loss",
-    "early_stop": 6,
+    "early_stop": 600,
     "visualize": "wandb",
     "wandb_project": "speech_separation_project",
     "grad_norm_clip": 10,
