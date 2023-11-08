@@ -83,6 +83,7 @@
     "early_stop": 6,
     "visualize": "wandb",
     "wandb_project": "speech_separation_project",
-    "grad_norm_clip": 10
+    "grad_norm_clip": 10,
+    "len_epoch": 100
   }
 }
