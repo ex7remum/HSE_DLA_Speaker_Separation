@@ -85,6 +85,7 @@ class Trainer(BaseTrainer):
         for batch_idx, batch in enumerate(
                 tqdm(self.train_dataloader, desc="train", total=self.len_epoch)
         ):
+            print(batch_idx)
             try:
                 batch = self.process_batch(
                     batch,
@@ -132,7 +133,7 @@ class Trainer(BaseTrainer):
         if is_train:
             self.optimizer.zero_grad()
         outputs = self.model(**batch)
-
+        print('Get outputs')
         crit_out = self.criterion(outputs, batch)
         print('Runned one batch')
         batch['loss'] = crit_out['loss']
