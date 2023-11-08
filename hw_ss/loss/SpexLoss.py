@@ -1,8 +1,12 @@
 import torch
 from torch import Tensor
+import torch.nn as nn
 
 
-class SpexPlusLoss():
+class SpexPlusLoss(nn.Module):
+    def __init__(self):
+        super(SpexPlusLoss, self).__init__()
+
     def sisdr(self, x, s, eps=1e-8):
 
         def l2norm(mat, keepdim=False):
