@@ -144,7 +144,7 @@ class Trainer(BaseTrainer):
             self._clip_grad_norm()
             self.optimizer.step()
             if self.lr_scheduler is not None:
-                self.lr_scheduler.step()
+                self.lr_scheduler.step(batch["loss"])  # because use ReduceLROnPlateau
 
         metrics.update("loss", batch["loss"].item())
         metrics.update("si_sdr", batch["si_sdr"].item())

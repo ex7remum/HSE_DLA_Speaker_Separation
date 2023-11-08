@@ -70,9 +70,9 @@ class LibrispeechDataset(BaseDataset):
 
     def _create_index(self, part):
         index = []
-        # split_dir = Path("/kaggle/input/librispeech") / part / 'LibriSpeech' / part
+        split_dir = Path("/kaggle/input/librispeech") / part / 'LibriSpeech' / part
         # split_dir = Path("/home/jupyter/mnt/datasets/LibriSpeech/LibriSpeech") / part
-        split_dir = self._data_dir / part
+        # split_dir = self._data_dir / part
         if not split_dir.exists():
             self._load_part(part)
 
@@ -95,14 +95,16 @@ class LibrispeechDataset(BaseDataset):
                                                  nfiles=self.dataset_size,
                                                  test=False)
             trim_db = 20
+            snr_levels = [-5 ,5]
         else:
             mixture_generator = MixtureGenerator(speaker_files,
                                                  self._data_dir,
                                                  nfiles=self.dataset_size,
                                                  test=True)
             trim_db = None
+            snr_levels = [0, 0]
 
-        mixture_generator.generate_mixes(snr_levels=[-5, 5],
+        mixture_generator.generate_mixes(snr_levels=snr_levels,
                                          num_workers=2,
                                          update_steps=100,
                                          trim_db=trim_db,
