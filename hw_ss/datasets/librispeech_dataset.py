@@ -36,7 +36,7 @@ class LibrispeechDataset(BaseDataset):
         self.dataset_size = dataset_size
         self.audio_len = audio_len
         if data_dir is None:
-            data_dir = ROOT_PATH / "data" / "datasets" / "librispeech"
+            data_dir = ROOT_PATH / "data" / "datasets" / "librispeech" / part
             data_dir.mkdir(exist_ok=True, parents=True)
         self._data_dir = data_dir
         if part == 'train_all':
@@ -88,7 +88,7 @@ class LibrispeechDataset(BaseDataset):
             speaker_files.append(LibriSpeechSpeakerFiles(speaker_id, split_dir,
                                                          audioTemplate='*.flac'))
 
-        not_test = ('train' in part) or ('dev' in part)
+        not_test = 'train' in part
         if not_test:
             mixture_generator = MixtureGenerator(speaker_files,
                                                  self._data_dir,
