@@ -118,7 +118,8 @@ class LibrispeechDataset(BaseDataset):
 
         for ref, mix, target in zip(all_ref, all_mix, all_target):
             file_name = re.split('/', ref)[-1]
-            target_id, noise_id, _ = re.split('_', file_name)
+            parts_splitted = re.split('_', file_name)
+            target_id, noise_id = parts_splitted[0], parts_splitted[1]
             target_id = self.id2ind[target_id]
             index.append(
                 {
