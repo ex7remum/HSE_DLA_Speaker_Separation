@@ -81,12 +81,9 @@ class BaseDataset(Dataset):
         if max_audio_length is not None:
             audio_lengths = []
             for item in index:
-                audio_tensor, sr = torchaudio.load(item['ref_path'])
-                audio_tensor = audio_tensor[0:1, :]
-                target_sr = 16000
-                if sr != target_sr:
-                    audio_tensor = torchaudio.functional.resample(audio_tensor, sr, target_sr)
-                audio_lengths.append(audio_tensor.shape[-1])
+                t_info = torchaudio.info(item['ref_path'])
+                length = t_info.num_frames / t_info.sample_rate
+                audio_lengths.append(length)
             exceeds_audio_length = np.array(audio_lengths) >= max_audio_length
             _total = exceeds_audio_length.sum()
             logger.info(
