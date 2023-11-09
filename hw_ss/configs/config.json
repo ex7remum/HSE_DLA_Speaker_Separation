@@ -81,19 +81,19 @@
     "type": "ReduceLROnPlateau",
     "args": {
       "factor": 0.5,
-      "patience": 5000
+      "patience": 2000
     }
   },
   "trainer": {
-    "epochs": 100,
+    "epochs": 200,
     "save_dir": "saved/",
     "save_period": 5,
     "verbosity": 2,
     "monitor": "min val_loss",
-    "early_stop": 15000,
+    "early_stop": 6000,
     "visualize": "wandb",
     "wandb_project": "speech_separation_project",
     "grad_norm_clip": 10,
-    "len_epoch": 2500
+    "len_epoch": 1000
   }
 }
