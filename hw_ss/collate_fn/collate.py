@@ -48,5 +48,4 @@ def collate_fn(dataset_items: List[dict]):
                     'path_mix': path_mix,
                     'len_mix': len_mix,
                     'target_id': target_ids}
-    print(audio_tgt.shape, audio_ref.shape, audio_mix.shape)
     return result_batch

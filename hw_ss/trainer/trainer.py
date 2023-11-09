@@ -137,7 +137,9 @@ class Trainer(BaseTrainer):
         outputs = self.model(**batch)
 
         crit_out = self.criterion(outputs, batch)
-
+        batch['s1'] = outputs['s1']
+        batch['s2'] = outputs['s2']
+        batch['s3'] = outputs['s3']
         batch['loss'] = crit_out['loss']
         batch['si_sdr'] = crit_out['si_sdr']
         batch['ce_loss'] = crit_out['ce_loss']
@@ -223,3 +225,4 @@ class Trainer(BaseTrainer):
         pred_audio = 0.8 * s1 + 0.1 * s2 + 0.1 * s3
         self.writer.add_audio('audio_pred', pred_audio[0], sample_rate=16000)
         self.writer.add_audio('audio_tgt', audio_tgt[0], sample_rate=16000)
+        self.writer.add_audio('s1', s1[0], sample_rate=16000)
