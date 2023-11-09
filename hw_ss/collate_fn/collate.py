@@ -21,7 +21,8 @@ def form_batch(dataset_items: List[dict], audio_type: str):
     audios = torch.zeros((batch_size, 1, max_audio_time))
     for item_num, item in enumerate(dataset_items):
         cur_audio = item[audio_name]
-        audios[item_num, :, :min(cur_audio.shape[1], max_audio_time)] = cur_audio
+        audios[item_num, :, :min(cur_audio.shape[1], max_audio_time)] = cur_audio[..., :min(cur_audio.shape[1],
+                                                                                            max_audio_time)]
 
     paths = [item[paths_name] for item in dataset_items]
     return paths, audios, audio_lengths
