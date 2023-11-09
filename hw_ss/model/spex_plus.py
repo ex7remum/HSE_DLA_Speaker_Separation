@@ -148,9 +148,9 @@ class SpexPlus(nn.Module):
         S2 = w2 * m2
         S3 = w3 * m3
 
-        short_res = self.decoder_short(S1).squeeze()
-        middle_res = self.decoder_middle(S2).squeeze()[:, :xlen1]
-        long_res = self.decoder_long(S3).squeeze()[:, :xlen1]
+        short_res = self.decoder_short(S1).squeeze(1)
+        middle_res = self.decoder_middle(S2).squeeze(1)[:, :xlen1]
+        long_res = self.decoder_long(S3).squeeze(1)[:, :xlen1]
         logits_spkrs = self.class_head(ref)
         return {
             's1': short_res,
