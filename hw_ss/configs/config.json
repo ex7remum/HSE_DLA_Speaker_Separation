@@ -30,7 +30,7 @@
           "args": {
             "part": "train-clean-360",
             "num_speakers": 30,
-            "dataset_size": 10000,
+            "dataset_size": 1000,
             "audio_len": 3
           }
         }
@@ -45,7 +45,7 @@
           "args": {
             "part": "test-clean",
             "num_speakers": 30,
-            "dataset_size": 1000,
+            "dataset_size": 100,
             "audio_len": 3
           }
         }
