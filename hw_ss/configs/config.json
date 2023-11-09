@@ -29,11 +29,10 @@
           "type": "LibrispeechDataset",
           "args": {
             "part": "train-clean-100",
-            "limit": 4,
             "num_speakers": 10,
             "dataset_size": 1200,
             "audio_len": 3,
-            "max_audio_length": 10
+            "max_audio_length": 15
           }
         }
       ]
@@ -46,7 +45,6 @@
           "type": "LibrispeechDataset",
           "args": {
             "part": "test-clean",
-            "limit": 4,
             "num_speakers": 10,
             "dataset_size": 100,
             "audio_len": 3
