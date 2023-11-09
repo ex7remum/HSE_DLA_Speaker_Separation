@@ -1,4 +1,4 @@
-from torchmetrics.audio.pesq import PerceptualEvaluationSpeechQuality
+from torchmetrics.audio import PerceptualEvaluationSpeechQuality
 from hw_ss.base.base_metric import BaseMetric
 import torch
 
