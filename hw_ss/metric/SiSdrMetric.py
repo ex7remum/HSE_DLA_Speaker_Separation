@@ -10,4 +10,4 @@ class SiSdrMetric(BaseMetric):
     def __call__(self, s1, s2, s3, audio_tgt, *args, **kwargs):
         with torch.no_grad():
             pred_audio = 0.8 * s1 + 0.1 * s2 + 0.1 * s3
-            return scale_invariant_signal_distortion_ratio(pred_audio, audio_tgt.squeeze(1))
+            return scale_invariant_signal_distortion_ratio(pred_audio, audio_tgt.squeeze(1)).mean()
