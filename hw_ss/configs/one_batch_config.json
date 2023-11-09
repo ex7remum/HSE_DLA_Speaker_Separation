@@ -28,7 +28,7 @@
         {
           "type": "LibrispeechDataset",
           "args": {
-            "part": "train-clean",
+            "part": "train-clean-100",
             "limit": 10,
             "num_speakers": 20,
             "dataset_size": 100,
@@ -44,7 +44,7 @@
         {
           "type": "LibrispeechDataset",
           "args": {
-            "part": "train-clean",
+            "part": "train-clean-100",
             "limit": 10,
             "num_speakers": 20,
             "dataset_size": 100,
