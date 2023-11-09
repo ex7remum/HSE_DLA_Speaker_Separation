@@ -140,6 +140,9 @@ class Trainer(BaseTrainer):
         batch['s1'] = outputs['s1']
         batch['s2'] = outputs['s2']
         batch['s3'] = outputs['s3']
+        batch['s1'] = batch['s1'].to(self.device)
+        batch['s2'] = batch['s2'].to(self.device)
+        batch['s3'] = batch['s3'].to(self.device)
         batch['loss'] = crit_out['loss']
         batch['si_sdr'] = crit_out['si_sdr']
         batch['ce_loss'] = crit_out['ce_loss']
