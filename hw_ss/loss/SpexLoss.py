@@ -33,15 +33,15 @@ class SpexPlusLoss(nn.Module):
 
     def forward(self, pred_values, batch):
         logits = pred_values['logits']
-        s1 = pred_values['s1'].squeeze()
-        s2 = pred_values['s2'].squeeze()
-        s3 = pred_values['s3'].squeeze()
+        s1 = pred_values['s1'].squeeze(1)
+        s2 = pred_values['s2'].squeeze(1)
+        s3 = pred_values['s3'].squeeze(1)
         valid_len = batch['len_tgt']
         tgt_id = batch['target_id']
         ests = self.mask_by_length(s1, valid_len)
         ests2 = self.mask_by_length(s2, valid_len)
         ests3 = self.mask_by_length(s3, valid_len)
-        tgt = self.mask_by_length(batch['audio_tgt'].squeeze(), valid_len)
+        tgt = self.mask_by_length(batch['audio_tgt'].squeeze(1), valid_len)
         snr1 = self.sisdr(ests, tgt)
         snr2 = self.sisdr(ests2, tgt)
         snr3 = self.sisdr(ests3, tgt)
