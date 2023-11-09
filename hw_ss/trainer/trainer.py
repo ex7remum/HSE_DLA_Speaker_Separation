@@ -144,7 +144,7 @@ class Trainer(BaseTrainer):
             self._clip_grad_norm()
             self.optimizer.step()
             if self.lr_scheduler is not None:
-                self.lr_scheduler.step()
+                self.lr_scheduler.step(batch["loss"].item())
 
         metrics.update("loss", batch["loss"].item())
         metrics.update("si_sdr", batch["si_sdr"].item())
@@ -176,6 +176,7 @@ class Trainer(BaseTrainer):
                 )
             self.writer.set_step(epoch * self.len_epoch, part)
             self._log_scalars(self.evaluation_metrics)
+            self._log_audio(**batch)
 
         # add histogram of model parameters to the tensorboard
         for name, p in self.model.named_parameters():
@@ -211,3 +212,11 @@ class Trainer(BaseTrainer):
             return
         for metric_name in metric_tracker.keys():
             self.writer.add_scalar(f"{metric_name}", metric_tracker.avg(metric_name))
+
+    @torch.no_grad()
+    def _log_audio(self, s1, s2, s3, audio_tgt, *args, **kwargs):
+        if self.writer is None:
+            return
+        pred_audio = 0.8 * s1 + 0.1 * s2 + 0.1 * s3
+        self.writer.add_audio('audio_pred', pred_audio[0], sample_rate=16000)
+        self.writer.add_audio('audio_tgt', audio_tgt[0], sample_rate=16000)

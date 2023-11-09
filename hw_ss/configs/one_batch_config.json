@@ -17,7 +17,7 @@
   "arch": {
     "type": "SpexPlus",
     "args": {
-      "num_spks": 2
+      "num_spks": 20
     }
   },
   "data": {
@@ -30,7 +30,7 @@
           "args": {
             "part": "dev-clean",
             "limit": 4,
-            "num_speakers": 2,
+            "num_speakers": 20,
             "dataset_size": 100,
             "audio_len": 3
           }
@@ -46,7 +46,7 @@
           "args": {
             "part": "dev-clean",
             "limit": 4,
-            "num_speakers": 2,
+            "num_speakers": 20,
             "dataset_size": 100,
             "audio_len": 3
           }
@@ -65,15 +65,25 @@
     "type": "SpexLoss",
     "args": {}
   },
-  "metrics": [],
+  "metrics": [
+    {
+      "type": "SiSdrMetric",
+      "args": {
+        "name": "Si-Sdr"
+      }
+    },
+    {
+      "type": "PESQMetric",
+      "args": {
+        "name": "PESQ"
+      }
+    }
+  ],
   "lr_scheduler": {
-    "type": "OneCycleLR",
+    "type": "ReduceLROnPlateau",
     "args": {
-      "steps_per_epoch": 100,
-      "epochs": 100,
-      "anneal_strategy": "cos",
-      "max_lr": 1e-3,
-      "pct_start": 0.2
+      "factor": 0.5,
+      "patience": 200
     }
   },
   "trainer": {

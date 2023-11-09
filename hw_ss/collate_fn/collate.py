@@ -11,11 +11,17 @@ def form_batch(dataset_items: List[dict], audio_type: str):
     paths_name = 'path_' + audio_type
     audio_name = 'audio_' + audio_type
     audio_lengths = torch.tensor([item[audio_name].shape[1] for item in dataset_items])
+
+    if audio_type == 'ref':
+        for ref_idx, ref_length in enumerate(audio_lengths):
+            if ref_length > 16000 * 7:
+                audio_lengths[ref_idx] = 16000 * 7
+
     max_audio_time = audio_lengths.max()
     audios = torch.zeros((batch_size, 1, max_audio_time))
     for item_num, item in enumerate(dataset_items):
         cur_audio = item[audio_name]
-        audios[item_num, :, :cur_audio.shape[1]] = cur_audio
+        audios[item_num, :, :min(cur_audio.shape[1], max_audio_time)] = cur_audio
 
     paths = [item[paths_name] for item in dataset_items]
     return paths, audios, audio_lengths
