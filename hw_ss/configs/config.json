@@ -33,7 +33,7 @@
             "num_speakers": 10,
             "dataset_size": 1200,
             "audio_len": 3,
-            "max_audio_length": 20
+            "max_audio_length": 10
           }
         }
       ]
