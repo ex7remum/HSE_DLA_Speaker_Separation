@@ -149,11 +149,11 @@ class SpexPlus(nn.Module):
         S3 = w3 * m3
 
         short_res = self.decoder_short(S1).squeeze(1)
-        short_res = F.pad(short_res, (0, T - short_res.shape[-1]), "constant", 0)
+        short_res = F.pad(short_res, (0, xlen1 - short_res.shape[-1]), "constant", 0)
         middle_res = self.decoder_middle(S2).squeeze(1)[:, :xlen1]
-        middle_res = F.pad(middle_res, (0, T - middle_res.shape[-1]), "constant", 0)
+        middle_res = F.pad(middle_res, (0, xlen1 - middle_res.shape[-1]), "constant", 0)
         long_res = self.decoder_long(S3).squeeze(1)[:, :xlen1]
-        long_res = F.pad(long_res, (0, T - long_res.shape[-1]), "constant", 0)
+        long_res = F.pad(long_res, (0, xlen1 - long_res.shape[-1]), "constant", 0)
         logits_spkrs = self.class_head(ref)
         return {
             's1': short_res,
