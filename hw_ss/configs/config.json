@@ -28,7 +28,7 @@
         {
           "type": "LibrispeechDataset",
           "args": {
-            "part": "train-clean-100",
+            "part": "train-clean-360",
             "num_speakers": 30,
             "dataset_size": 10000,
             "audio_len": 3
