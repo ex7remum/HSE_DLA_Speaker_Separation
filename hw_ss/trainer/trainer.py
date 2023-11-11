@@ -157,7 +157,11 @@ class Trainer(BaseTrainer):
         metrics.update("ce_loss", batch["ce_loss"].item())
         metrics.update("acc_speakers", batch["acc_speakers"])
         for met in self.metrics:
-            metrics.update(met.name, met(**batch))
+            try:
+                res = met(**batch)
+                metrics.update(met.name, res)
+            except:
+                pass
         return batch
 
     def _evaluation_epoch(self, epoch, part, dataloader):
