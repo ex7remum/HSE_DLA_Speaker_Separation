@@ -94,7 +94,7 @@ class LibrispeechDataset(BaseDataset):
                                                  self._data_dir,
                                                  nfiles=self.dataset_size,
                                                  test=False)
-            trim_db = 20
+            trim_db = None
             snr_levels = [-5 ,5]
         else:
             mixture_generator = MixtureGenerator(speaker_files,
