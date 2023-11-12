@@ -37,7 +37,13 @@ class LibrispeechDataset(BaseDataset):
         self.audio_len = audio_len
         if data_dir is None:
             data_dir = ROOT_PATH / "data" / "datasets" / "librispeech"
+            data_dir_mix = data_dir / 'mix'
+            data_dir_refs = data_dir / 'refs'
+            data_dir_targets = data_dir / 'targets'
             data_dir.mkdir(exist_ok=True, parents=True)
+            data_dir_mix.mkdir(exist_ok=True, parents=True)
+            data_dir_refs.mkdir(exist_ok=True, parents=True)
+            data_dir_targets.mkdir(exist_ok=True, parents=True)
         self._data_dir = data_dir
         if part == 'train_all':
             index = sum([self._get_or_load_index(part)
