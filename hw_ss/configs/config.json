@@ -30,9 +30,9 @@
           "args": {
             "part": "train-clean-360",
             "num_speakers": 30,
-            "dataset_size": 3334,
+            "dataset_size": 200,
             "audio_len": 3,
-            "limit": 3334
+            "limit": 200
           }
         },
         {
@@ -40,9 +40,9 @@
           "args": {
             "part": "train-clean-100",
             "num_speakers": 30,
-            "dataset_size": 3333,
+            "dataset_size": 200,
             "audio_len": 3,
-            "limit": 3333
+            "limit": 200
           }
         },
         {
@@ -50,9 +50,9 @@
           "args": {
             "part": "dev-clean",
             "num_speakers": 30,
-            "dataset_size": 3333,
+            "dataset_size": 200,
             "audio_len": 3,
-            "limit": 3333
+            "limit": 200
           }
         }
       ]
