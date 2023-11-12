@@ -53,7 +53,6 @@ class Trainer(BaseTrainer):
             *[m.name for m in self.metrics], writer=self.writer
         )
         self.evaluation_metrics = MetricTracker(
-            "loss", 'si_sdr', 'ce_loss',  'acc_speakers',
             *[m.name for m in self.metrics], writer=self.writer
         )
 
@@ -136,26 +135,28 @@ class Trainer(BaseTrainer):
             self.optimizer.zero_grad()
         outputs = self.model(**batch)
 
-        crit_out = self.criterion(outputs, batch)
         batch['s1'] = outputs['s1']
         batch['s2'] = outputs['s2']
         batch['s3'] = outputs['s3']
 
-        batch['loss'] = crit_out['loss']
-        batch['si_sdr'] = crit_out['si_sdr']
-        batch['ce_loss'] = crit_out['ce_loss']
-        batch['acc_speakers'] = crit_out['correct_speakers']
         if is_train:
+            crit_out = self.criterion(outputs, batch)
+            batch['loss'] = crit_out['loss']
+            batch['si_sdr'] = crit_out['si_sdr']
+            batch['ce_loss'] = crit_out['ce_loss']
+            batch['acc_speakers'] = crit_out['correct_speakers']
+
+            metrics.update("loss", batch["loss"].item())
+            metrics.update("si_sdr", batch["si_sdr"].item())
+            metrics.update("ce_loss", batch["ce_loss"].item())
+            metrics.update("acc_speakers", batch["acc_speakers"])
+
             batch["loss"].backward()
             self._clip_grad_norm()
             self.optimizer.step()
             if self.lr_scheduler is not None:
                 self.lr_scheduler.step(batch["loss"].item())
 
-        metrics.update("loss", batch["loss"].item())
-        metrics.update("si_sdr", batch["si_sdr"].item())
-        metrics.update("ce_loss", batch["ce_loss"].item())
-        metrics.update("acc_speakers", batch["acc_speakers"])
         for met in self.metrics:
             try:
                 res = met(**batch)
