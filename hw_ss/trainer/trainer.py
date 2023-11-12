@@ -228,6 +228,7 @@ class Trainer(BaseTrainer):
         if self.writer is None:
             return
         pred_audio = 0.8 * s1 + 0.1 * s2 + 0.1 * s3
+        pred_audio = 20 * pred_audio / pred_audio.norm()
         pred_audio_norm = pred_audio - torch.mean(pred_audio, dim=-1, keepdim=True)
         self.writer.add_audio('audio_pred', pred_audio_norm[0], sample_rate=16000)
         self.writer.add_audio('audio_tgt', audio_tgt[0], sample_rate=16000)

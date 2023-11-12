@@ -93,14 +93,14 @@ def create_mix(idx, triplet, snr_levels, out_dir, test=False, sr=16000, **kwargs
     if len(ref) < sr:
         return
 
-    path_mix = os.path.join(out_dir, f"{target_id}_{noise_id}_" + "%06d" % idx + "-mixed.wav")
-    path_target = os.path.join(out_dir, f"{target_id}_{noise_id}_" + "%06d" % idx + "-target.wav")
-    path_ref = os.path.join(out_dir, f"{target_id}_{noise_id}_" + "%06d" % idx + "-ref.wav")
+    path_mix = os.path.join(out_dir, "mix", f"{target_id}_{noise_id}_" + "%06d" % idx + "-mixed.wav")
+    path_target = os.path.join(out_dir, "targets", f"{target_id}_{noise_id}_" + "%06d" % idx + "-target.wav")
+    path_ref = os.path.join(out_dir, "refs", f"{target_id}_{noise_id}_" + "%06d" % idx + "-ref.wav")
 
     snr = np.random.choice(snr_levels, 1).item()
 
     if not test:
-        #s1, s2 = vad_merge(s1, vad_db), vad_merge(s2, vad_db)
+        s1, s2 = vad_merge(s1, vad_db), vad_merge(s2, vad_db)
         s1_cut, s2_cut = cut_audios(s1, s2, audioLen, sr)
 
         for i in range(len(s1_cut)):
@@ -118,6 +118,7 @@ def create_mix(idx, triplet, snr_levels, out_dir, test=False, sr=16000, **kwargs
             sf.write(path_target_i, s1_cut[i], sr)
             sf.write(path_ref_i, ref, sr)
     else:
+        s1, s2 = vad_merge(s1, vad_db), vad_merge(s2, vad_db)
         s1, s2 = fix_length(s1, s2, 'max')
         mix = snr_mixer(s1, s2, snr)
         louds1 = meter.integrated_loudness(s1)

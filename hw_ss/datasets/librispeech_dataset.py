@@ -36,7 +36,7 @@ class LibrispeechDataset(BaseDataset):
         self.dataset_size = dataset_size
         self.audio_len = audio_len
         if data_dir is None:
-            data_dir = ROOT_PATH / "data" / "datasets" / "librispeech" / part
+            data_dir = ROOT_PATH / "data" / "datasets" / "librispeech"
             data_dir.mkdir(exist_ok=True, parents=True)
         self._data_dir = data_dir
         if part == 'train_all':
@@ -79,23 +79,20 @@ class LibrispeechDataset(BaseDataset):
         speaker_ids = [speaker_id.name for speaker_id in os.scandir(split_dir)][:self.num_speakers]
         self.id2ind = {}
         self.ind2id = {}
-        for i, speaker_id in enumerate(speaker_ids):
-            self.id2ind[speaker_id] = i
-            self.ind2id[i] = speaker_id
 
         speaker_files = []
         for speaker_id in speaker_ids:
             speaker_files.append(LibriSpeechSpeakerFiles(speaker_id, split_dir,
                                                          audioTemplate='*.flac'))
 
-        not_test = 'train' in part
+        not_test = ('train' in part) or ('dev' in part)
         if not_test:
             mixture_generator = MixtureGenerator(speaker_files,
                                                  self._data_dir,
                                                  nfiles=self.dataset_size,
                                                  test=False)
             trim_db = None
-            snr_levels = [-5 ,5]
+            snr_levels = [-5, 5]
         else:
             mixture_generator = MixtureGenerator(speaker_files,
                                                  self._data_dir,
@@ -112,15 +109,14 @@ class LibrispeechDataset(BaseDataset):
                                          audioLen=self.audio_len)
 
         # mixes = os.listdir(self._data_dir)
-        all_ref = sorted(glob(os.path.join(self._data_dir, '*-ref.wav')))
-        all_mix = sorted(glob(os.path.join(self._data_dir, '*-mixed.wav')))
-        all_target = sorted(glob(os.path.join(self._data_dir, '*-target.wav')))
+        all_ref = sorted(glob(os.path.join(self._data_dir, 'refs', '*-ref.wav')))
+        all_mix = sorted(glob(os.path.join(self._data_dir, 'mix', '*-mixed.wav')))
+        all_target = sorted(glob(os.path.join(self._data_dir, 'targets', '*-target.wav')))
 
         for ref, mix, target in zip(all_ref, all_mix, all_target):
             file_name = re.split('/', ref)[-1]
             parts_splitted = re.split('_', file_name)
             target_id, noise_id = parts_splitted[0], parts_splitted[1]
-            target_id = self.id2ind[target_id]
             index.append(
                 {
                     "ref_path": ref,

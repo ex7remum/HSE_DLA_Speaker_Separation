@@ -26,6 +26,8 @@ class BaseDataset(Dataset):
         self.wave_augs = wave_augs
 
         self._index = self._filter_records_from_dataset(index, limit, max_audio_length)
+        self.id2ind = {}
+        self.cur_max_id = 0
 
     def __getitem__(self, ind):
         data_dict = self._index[ind]
@@ -37,6 +39,12 @@ class BaseDataset(Dataset):
         audio_wave_ref = self.load_audio(audio_path_ref)
         audio_wave_mix = self.load_audio(audio_path_mix)
 
+        target_id = data_dict['target_id']
+        if target_id not in self.id2ind:
+            self.id2ind[target_id] = self.cur_max_id
+            self.cur_max_id += 1
+        target_id_index = self.id2ind[target_id]
+
         return {
             'audio_tgt': audio_wave_tgt,
             'path_tgt': audio_path_tgt,
@@ -44,7 +52,7 @@ class BaseDataset(Dataset):
             'path_ref': audio_path_ref,
             'audio_mix': audio_wave_mix,
             'path_mix': audio_path_mix,
-            'target_id': data_dict['target_id']
+            'target_id': target_id_index
         }
 
     def __len__(self):
