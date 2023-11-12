@@ -66,8 +66,9 @@
           "args": {
             "part": "test-clean",
             "num_speakers": 30,
-            "dataset_size": 1000,
-            "audio_len": 3
+            "dataset_size": 300,
+            "audio_len": 3,
+            "limit": 300
           }
         }
       ]
