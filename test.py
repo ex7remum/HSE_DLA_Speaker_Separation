@@ -138,12 +138,13 @@ if __name__ == "__main__":
                 "num_workers": args.jobs,
                 "datasets": [
                     {
-                        "type": "CustomDirAudioDataset",
+                        "type": "LibrispeechDataset",
                         "args": {
-                            "audio_dir": str(test_data_folder / "audio"),
-                            "transcription_dir": str(
-                                test_data_folder / "transcriptions"
-                            ),
+                            "part": "test-clean",
+                            "num_speakers": 30,
+                            "dataset_size": 300,
+                            "audio_len": 3,
+                            "data_dir": str(test_data_folder)
                         },
                     }
                 ],

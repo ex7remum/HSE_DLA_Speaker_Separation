@@ -80,13 +80,13 @@ class LibrispeechDataset(BaseDataset):
 
     def _create_index(self, part):
         index = []
-        split_dir = Path("/kaggle/input/librispeech") / part / 'LibriSpeech' / part
-        # split_dir = Path("/home/jupyter/mnt/datasets/LibriSpeech/LibriSpeech") / part
-        # split_dir = self._data_dir / part
-        if not split_dir.exists():
-            self._load_part(part)
 
         if not os.listdir(os.path.join(self._data_dir, 'refs')):
+            split_dir = Path("/kaggle/input/librispeech") / part / 'LibriSpeech' / part
+            # split_dir = Path("/home/jupyter/mnt/datasets/LibriSpeech/LibriSpeech") / part
+            # split_dir = self._data_dir / part
+            if not split_dir.exists():
+                self._load_part(part)
 
             speaker_ids = [speaker_id.name for speaker_id in os.scandir(split_dir)][:self.num_speakers]
             self.id2ind = {}
