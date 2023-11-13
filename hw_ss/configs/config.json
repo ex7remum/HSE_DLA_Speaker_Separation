@@ -30,9 +30,9 @@
           "args": {
             "part": "train-clean-360",
             "num_speakers": 30,
-            "dataset_size": 200,
+            "dataset_size": 3334,
             "audio_len": 3,
-            "limit": 200
+            "limit": 3334
           }
         },
         {
@@ -40,9 +40,9 @@
           "args": {
             "part": "train-clean-100",
             "num_speakers": 30,
-            "dataset_size": 200,
+            "dataset_size": 3333,
             "audio_len": 3,
-            "limit": 200
+            "limit": 3333
           }
         },
         {
@@ -50,9 +50,9 @@
           "args": {
             "part": "dev-clean",
             "num_speakers": 30,
-            "dataset_size": 200,
+            "dataset_size": 3333,
             "audio_len": 3,
-            "limit": 200
+            "limit": 3333
           }
         }
       ]
@@ -116,6 +116,6 @@
     "visualize": "wandb",
     "wandb_project": "speech_separation_project",
     "grad_norm_clip": 10,
-    "len_epoch": 150
+    "len_epoch": 1000
   }
 }
