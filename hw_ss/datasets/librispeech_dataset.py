@@ -48,6 +48,8 @@ class LibrispeechDataset(BaseDataset):
             data_dir_mix.mkdir(exist_ok=True, parents=True)
             data_dir_refs.mkdir(exist_ok=True, parents=True)
             data_dir_targets.mkdir(exist_ok=True, parents=True)
+        else:
+            data_dir = Path(data_dir)
         self._data_dir = data_dir
         if part == 'train_all':
             index = sum([self._get_or_load_index(part)
