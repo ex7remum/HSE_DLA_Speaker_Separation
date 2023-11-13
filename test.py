@@ -6,12 +6,12 @@ from pathlib import Path
 import torch
 from tqdm import tqdm
 
-import hw_asr.model as module_model
-import hw_asr.metric as module_metric
-from hw_asr.trainer import Trainer
-from hw_asr.utils import ROOT_PATH, MetricTracker
-from hw_asr.utils.object_loading import get_dataloaders
-from hw_asr.utils.parse_config import ConfigParser
+import hw_ss.model as module_model
+import hw_ss.metric as module_metric
+from hw_ss.trainer import Trainer
+from hw_ss.utils import ROOT_PATH, MetricTracker
+from hw_ss.utils.object_loading import get_dataloaders
+from hw_ss.utils.parse_config import ConfigParser
 
 DEFAULT_CHECKPOINT_PATH = ROOT_PATH / "default_test_model" / "checkpoint.pth"
 
@@ -22,14 +22,11 @@ def main(config, out_file):
     # define cpu or gpu if possible
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-    # text_encoder
-    text_encoder = config.get_text_encoder()
-
     # setup data_loader instances
-    dataloaders = get_dataloaders(config, text_encoder)
+    dataloaders = get_dataloaders(config)
 
     # build model architecture
-    model = config.init_obj(config["arch"], module_model, n_class=len(text_encoder))
+    model = config.init_obj(config["arch"], module_model)
     logger.info(model)
 
     logger.info("Loading checkpoint: {} ...".format(config.resume))
@@ -44,46 +41,22 @@ def main(config, out_file):
     model.eval()
 
     metrics = [
-        config.init_obj(metric_dict, module_metric, text_encoder=text_encoder)
+        config.init_obj(metric_dict, module_metric)
         for metric_dict in config["metrics"]
     ]
     metrics_tracker = MetricTracker(
         *[m.name for m in metrics]
     )
-    results = []
+
     with torch.no_grad():
         for batch_num, batch in enumerate(tqdm(dataloaders["test"])):
             batch = Trainer.move_batch_to_device(batch, device)
             output = model(**batch)
-            if type(output) is dict:
-                batch.update(output)
-            else:
-                batch["logits"] = output
-            batch["log_probs"] = torch.log_softmax(batch["logits"], dim=-1)
-            batch["log_probs_length"] = model.transform_input_lengths(
-                batch["spectrogram_length"]
-            )
+            batch.update(output)
             for metric in metrics:
-                metrics_tracker.update(metric.name, metric(**batch), n=len(batch['text']))
-
-            batch["probs"] = batch["log_probs"].exp().cpu()
-            batch["argmax"] = batch["probs"].argmax(-1)
-            length = batch['log_probs_length'][0]
-            pred_text_argmax = text_encoder.ctc_decode(batch["argmax"][0][:length].numpy())
-            pred_text_beam_lm = text_encoder.lm_ctc_beam_search(batch['probs'][0][:length], beam_size=200,
-                                                                alpha=1.0)[0].text
-            pred_text_beam = text_encoder.ctc_beam_search(batch['probs'][0][:length], beam_size=3)[0].text
-
-            results.append({
-                "ground_trurh": batch["text"][0],
-                "pred_text_argmax": pred_text_argmax,
-                "pred_text_beam_search": pred_text_beam,
-                "pred_text_beam_search_lm": pred_text_beam_lm
-            })
+                metrics_tracker.update(metric.name, metric(**batch))
 
     print(metrics_tracker.result())
-    with Path(out_file).open('w') as f:
-        json.dump(results, f, indent=2)
 
 
 if __name__ == "__main__":

@@ -80,43 +80,45 @@ class LibrispeechDataset(BaseDataset):
 
     def _create_index(self, part):
         index = []
-        # split_dir = Path("/kaggle/input/librispeech") / part / 'LibriSpeech' / part
-        split_dir = Path("/home/jupyter/mnt/datasets/LibriSpeech/LibriSpeech") / part
+        split_dir = Path("/kaggle/input/librispeech") / part / 'LibriSpeech' / part
+        # split_dir = Path("/home/jupyter/mnt/datasets/LibriSpeech/LibriSpeech") / part
         # split_dir = self._data_dir / part
         if not split_dir.exists():
             self._load_part(part)
 
-        speaker_ids = [speaker_id.name for speaker_id in os.scandir(split_dir)][:self.num_speakers]
-        self.id2ind = {}
-        self.ind2id = {}
+        if not os.listdir(os.path.join(self._data_dir, 'refs')):
 
-        speaker_files = []
-        for speaker_id in speaker_ids:
-            speaker_files.append(LibriSpeechSpeakerFiles(speaker_id, split_dir,
-                                                         audioTemplate='*.flac'))
+            speaker_ids = [speaker_id.name for speaker_id in os.scandir(split_dir)][:self.num_speakers]
+            self.id2ind = {}
+            self.ind2id = {}
 
-        not_test = ('train' in part) or ('dev' in part)
-        if not_test:
-            mixture_generator = MixtureGenerator(speaker_files,
-                                                 self._data_dir,
-                                                 nfiles=self.dataset_size,
-                                                 test=False)
-            trim_db = None
-            snr_levels = [-5, 5]
-        else:
-            mixture_generator = MixtureGenerator(speaker_files,
-                                                 self._data_dir,
-                                                 nfiles=self.dataset_size,
-                                                 test=True)
-            trim_db = None
-            snr_levels = [0, 0]
+            speaker_files = []
+            for speaker_id in speaker_ids:
+                speaker_files.append(LibriSpeechSpeakerFiles(speaker_id, split_dir,
+                                                             audioTemplate='*.flac'))
 
-        mixture_generator.generate_mixes(snr_levels=snr_levels,
-                                         num_workers=2,
-                                         update_steps=100,
-                                         trim_db=trim_db,
-                                         vad_db=20,
-                                         audioLen=self.audio_len)
+            not_test = ('train' in part) or ('dev' in part)
+            if not_test:
+                mixture_generator = MixtureGenerator(speaker_files,
+                                                     self._data_dir,
+                                                     nfiles=self.dataset_size,
+                                                     test=False)
+                trim_db = None
+                snr_levels = [-5, 5]
+            else:
+                mixture_generator = MixtureGenerator(speaker_files,
+                                                     self._data_dir,
+                                                     nfiles=self.dataset_size,
+                                                     test=True)
+                trim_db = None
+                snr_levels = [0, 0]
+
+            mixture_generator.generate_mixes(snr_levels=snr_levels,
+                                             num_workers=2,
+                                             update_steps=100,
+                                             trim_db=trim_db,
+                                             vad_db=20,
+                                             audioLen=self.audio_len)
 
         # mixes = os.listdir(self._data_dir)
         all_ref = sorted(glob(os.path.join(self._data_dir, 'refs', '*-ref.wav')))

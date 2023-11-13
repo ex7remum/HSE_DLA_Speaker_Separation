@@ -15,3 +15,5 @@ pillow
 pyloudnorm
 pesq
 torchmetrics
+wget
+gdown
