@@ -36,7 +36,11 @@ class LibrispeechDataset(BaseDataset):
         self.dataset_size = dataset_size
         self.audio_len = audio_len
         if data_dir is None:
-            data_dir = ROOT_PATH / "data" / "datasets" / "librispeech"
+            if "test" in part:
+                add = "test"
+            else:
+                add = "train"
+            data_dir = ROOT_PATH / "data" / "datasets" / "librispeech" / add
             data_dir_mix = data_dir / 'mix'
             data_dir_refs = data_dir / 'refs'
             data_dir_targets = data_dir / 'targets'
