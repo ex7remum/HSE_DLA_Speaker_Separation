@@ -114,7 +114,7 @@
     "monitor": "min val_loss",
     "early_stop": 6000,
     "visualize": "wandb",
-    "wandb_project": "speech_separation_project",
+    "wandb_project": "speaker_separation_project",
     "grad_norm_clip": 10,
     "len_epoch": 1000
   }
