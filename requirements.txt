@@ -14,3 +14,4 @@ torchaudio~=0.11.0
 pillow
 pyloudnorm
 pesq
+torchmetrics
