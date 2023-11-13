@@ -99,34 +99,20 @@ def create_mix(idx, triplet, snr_levels, out_dir, test=False, sr=16000, **kwargs
 
     snr = np.random.choice(snr_levels, 1).item()
 
-    if not test:
-        s1, s2 = vad_merge(s1, vad_db), vad_merge(s2, vad_db)
-        s1_cut, s2_cut = cut_audios(s1, s2, audioLen, sr)
+    s1, s2 = vad_merge(s1, vad_db), vad_merge(s2, vad_db)
+    s1_cut, s2_cut = cut_audios(s1, s2, audioLen, sr)
 
-        for i in range(len(s1_cut)):
-            mix = snr_mixer(s1_cut[i], s2_cut[i], snr)
+    for i in range(len(s1_cut)):
+        mix = snr_mixer(s1_cut[i], s2_cut[i], snr)
 
-            louds1 = meter.integrated_loudness(s1_cut[i])
-            s1_cut[i] = pyln.normalize.loudness(s1_cut[i], louds1, -23.0)
-            loudMix = meter.integrated_loudness(mix)
-            mix = pyln.normalize.loudness(mix, loudMix, -23.0)
-
-            path_mix_i = path_mix.replace("-mixed.wav", f"_{i}-mixed.wav")
-            path_target_i = path_target.replace("-target.wav", f"_{i}-target.wav")
-            path_ref_i = path_ref.replace("-ref.wav", f"_{i}-ref.wav")
-            sf.write(path_mix_i, mix, sr)
-            sf.write(path_target_i, s1_cut[i], sr)
-            sf.write(path_ref_i, ref, sr)
-    else:
-        s1, s2 = vad_merge(s1, vad_db), vad_merge(s2, vad_db)
-        s1, s2 = fix_length(s1, s2, 'max')
-        mix = snr_mixer(s1, s2, snr)
-        louds1 = meter.integrated_loudness(s1)
-        s1 = pyln.normalize.loudness(s1, louds1, -23.0)
-
+        louds1 = meter.integrated_loudness(s1_cut[i])
+        s1_cut[i] = pyln.normalize.loudness(s1_cut[i], louds1, -23.0)
         loudMix = meter.integrated_loudness(mix)
         mix = pyln.normalize.loudness(mix, loudMix, -23.0)
 
-        sf.write(path_mix, mix, sr)
-        sf.write(path_target, s1, sr)
-        sf.write(path_ref, ref, sr)
+        path_mix_i = path_mix.replace("-mixed.wav", f"_{i}-mixed.wav")
+        path_target_i = path_target.replace("-target.wav", f"_{i}-target.wav")
+        path_ref_i = path_ref.replace("-ref.wav", f"_{i}-ref.wav")
+        sf.write(path_mix_i, mix, sr)
+        sf.write(path_target_i, s1_cut[i], sr)
+        sf.write(path_ref_i, ref, sr)
